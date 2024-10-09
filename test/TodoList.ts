@@ -64,6 +64,22 @@ describe("TodoList Test", function () {
       expect(todoIndex).to.equal(1);
     });
 
-    
+    it("Should be able to update todo list as the Owner", async function () {
+      const { todoList, owner } = await loadFixture(deployTodoListFix);
+
+      const title1 = "It is good to code";
+      const description1 =
+        "I must always code 15hrs a day so I can improve my skill";
+
+      await todoList.connect(owner).createTodo(title1, description1);
+
+      const title = "try to code";
+      const description =
+        "code is life";
+
+      await todoList.connect(owner).updateTodo(0, title, description);
+
+      expect(await todoList.getTodo(0)).to.deep.equal([title, description, 2]);
+    });
   });
 });
