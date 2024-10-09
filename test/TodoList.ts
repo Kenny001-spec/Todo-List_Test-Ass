@@ -69,7 +69,7 @@ describe("TodoList Test", function () {
 
       const title1 = "It is good to code";
       const description1 =
-        "I must always code 15hrs a day so I can improve my skill";
+        "It is good to be a programer";
 
       await todoList.connect(owner).createTodo(title1, description1);
 
