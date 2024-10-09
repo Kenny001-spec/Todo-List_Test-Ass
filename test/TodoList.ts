@@ -27,8 +27,6 @@ describe("TodoList Test", function () {
       const description = "To defend my project";
       await todoList.connect(owner).createTodo(title, description);
 
-    
-
       const index = 0;
       const allTodos = await todoList.getAllTodo();
       const currentTodo = allTodos[index];
@@ -40,13 +38,32 @@ describe("TodoList Test", function () {
     });
 
     it("Should not be able to create todolist if not the owner", async function () {
-        const { todoList, otherAccount } = await loadFixture(deployTodoListFix);
-        const title = "To check if you are not the owner";
-        const description = "Only the contract owner can create a todo item. You are not permitted.";
-  
-        await expect(
-          todoList.connect(otherAccount).createTodo(title, description)
-        ).to.be.revertedWith("You are not allowed");
-      });
+      const { todoList, otherAccount } = await loadFixture(deployTodoListFix);
+      const title = "To check if you are not the owner";
+      const description = "Only the contract owner can create a todo item";
+
+      await expect(
+        todoList.connect(otherAccount).createTodo(title, description)
+      ).to.be.revertedWith("You're not allowed");
+    });
+
+    it("Should be able to get a single to do list", async function () {
+      const { todoList, owner } = await loadFixture(deployTodoListFix);
+
+      const index = 0;
+      const taskTitle = "Get out of the class";
+      const taskDescription = "Create a simple script to print 'Hello World";
+
+      await todoList.connect(owner).createTodo(taskTitle, taskDescription);
+
+      const [retrievedTitle, retrievedDescription, todoIndex] =
+        await todoList.getTodo(index);
+
+      expect(retrievedTitle).to.equal(taskTitle);
+      expect(retrievedDescription).to.equal(taskDescription);
+      expect(todoIndex).to.equal(1);
+    });
+
+    
   });
 });
